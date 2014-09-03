@@ -7,6 +7,7 @@
 package git
 
 import (
+	"bytes"
 	"errors"
 	"github.com/ochapman/setup"
 	"io"
@@ -15,6 +16,7 @@ import (
 )
 
 type Git struct {
+	user     setup.User
 	template string
 	config   string
 }
@@ -28,17 +30,29 @@ func (g *Git) Config() error {
 	if err != nil {
 		return err
 	}
+	defer src.Close()
 	conf := path.Join(home, g.config)
 	dst, err := os.OpenFile(conf, os.O_CREATE|os.O_WRONLY, 0644)
-	_, err = io.Copy(dst, src)
+	defer dst.Close()
+	err = g.parseUser(src, dst)
+	return err
+}
+
+func (g *Git) parseUser(r io.Reader, w io.Writer) error {
+	buf := make([]byte, 1000)
+	n, err := r.Read(buf)
 	if err != nil {
 		return err
 	}
-	return nil
+	buf = bytes.Replace(buf[:n], []byte("%NAME%"), []byte(g.user.Name), -1)
+	buf = bytes.Replace(buf, []byte("%EMAIL%"), []byte(g.user.Email), -1)
+	_, err = w.Write(buf)
+	return err
 }
 
-func NewConf(template, config string) setup.Configer {
+func NewConf(user setup.User, template, config string) setup.Configer {
 	return &Git{
+		user:     user,
 		template: template,
 		config:   config,
 	}

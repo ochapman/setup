@@ -8,10 +8,21 @@
 package main
 
 import (
+	"flag"
+	"github.com/ochapman/setup"
 	"github.com/ochapman/setup/git"
+	"os"
 )
 
 func main() {
-	g := git.NewConf("template/git.config", ".gitconfig")
+	var user setup.User
+	flag.StringVar(&user.Name, "name", "", "User name")
+	flag.StringVar(&user.Email, "email", "", "User email")
+	flag.Parse()
+	if user.Name == "" || user.Email == "" {
+		flag.PrintDefaults()
+		os.Exit(-1)
+	}
+	g := git.NewConf(user, "template/git.config", ".gitconfig")
 	g.Config()
 }

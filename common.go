@@ -18,3 +18,8 @@ type Installer interface {
 type Configer interface {
 	Config() error
 }
+
+type User struct {
+	Name  string
+	Email string
+}
