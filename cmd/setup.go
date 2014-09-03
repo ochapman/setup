@@ -10,6 +10,7 @@ package main
 import (
 	"flag"
 	"github.com/ochapman/setup"
+	"github.com/ochapman/setup/bash"
 	"github.com/ochapman/setup/git"
 	"os"
 )
@@ -25,4 +26,6 @@ func main() {
 	}
 	g := git.NewConf(user, "template/git.config", ".gitconfig")
 	g.Config()
+	b := bash.NewConf("template/bash", ".bash_profile")
+	b.Config()
 }
