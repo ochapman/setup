@@ -12,6 +12,7 @@ import (
 	"github.com/ochapman/setup"
 	"github.com/ochapman/setup/bash"
 	"github.com/ochapman/setup/git"
+	"github.com/ochapman/setup/vim"
 	"os"
 )
 
@@ -28,4 +29,6 @@ func main() {
 	g.Config()
 	b := bash.NewConf("template/bash", ".bash_profile")
 	b.Config()
+	v := vim.NewConf(user, "template/vim/vimrc", ".vimrc")
+	v.Config()
 }

@@ -1,0 +1,52 @@
+filetype off
+filetype plugin indent off
+set runtimepath+=$GOROOT/misc/vim
+filetype plugin indent on
+syntax on
+filetype plugin on
+
+" Cscope setting
+if has("cscope")
+	set csprg=/usr/bin/cscope
+	set csto=0
+	set cst
+	set nocsverb
+	" add any database in current directory
+	if filereadable("cscope.out")
+		cs add cscope.out
+		" else add database pointed to by environment
+	elseif $CSCOPE_DB != ""
+		cs add $CSCOPE_DB
+	endif
+	set csverb
+endif
+
+nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+set nu
+set hlsearch
+
+" golange command
+nmap <C-\>b :!go build <C-R>=expand("%:p")<CR><CR>
+nmap <C-\>k :Godoc<CR>
+"autocmd FileType go BufWritePre <buffer> silent Fmt
+autocmd BufWritePre *.go Fmt
+
+" golang template
+autocmd BufNewFile *.go exec ":call GolangTemplate2()"
+func GolangTemplate2()
+call setline(1, "/*")
+call append(line("."), "* File Name:\t".expand("%:t"))
+call append(line(".")+1, "* Description:\t")
+call append(line(".")+2, "* Author:\t%NAME% <%EMAIL%>")
+call append(line(".")+3, "* Created:\t".strftime("%Y-%m-%d"))
+call append(line(".")+4, "*/")
+call append(line(".")+5, "")
+autocmd BufNewFile * normal G
+endfunc
