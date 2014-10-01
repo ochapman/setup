@@ -50,3 +50,12 @@ call append(line(".")+4, "*/")
 call append(line(".")+5, "")
 autocmd BufNewFile * normal G
 endfunc
+
+" taglist
+let Tlist_Show_One_File=1
+let Tlist_WinWidth=30
+let Tlist_Exit_OnlyWindow=1
+let Tlist_Use_Right_Window=1
+
+"
+set fileencodings=ucs-bom,utf-8,gb2312,default,latin1
